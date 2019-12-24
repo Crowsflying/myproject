@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.company.dao.IUserDao">
+    <select id="findEmployee" resultType="com.company.bean.Employee">
+        select * from employee limit 6
+    </select>
+    <select id="findHistory" resultType="com.company.bean.History">
+        select * from history
+    </select>
+    <select id="findAllem" resultType="com.company.bean.Employee">
+        select * from employee
+    </select>
+    <delete id="deleteusername" parameterType="String">
+        delete  from employee where username=#{username}
+    </delete>
+    <select id="findByUsername" parameterType="String" resultType="com.company.bean.Employee">
+        select * from employee where username=#{username}
+    </select>
+    <update id="updateEmployee" parameterType="com.company.bean.Employee">
+        update employee set firstname=#{firstname},lastname=#{lastname},email=#{email},address=#{address} where username=#{username}
+    </update>
+    <insert id="insertEmployee" parameterType="com.company.bean.Employee">
+        insert into employee(username,firstname,lastname,email,address) values(#{username},#{firstname},#{lastname},#{email},#{address})
+    </insert>
+    <select id="login" resultType="com.company.bean.User" parameterType="String">
+        select * from user where username=#{username} limit 1
+    </select>
+    <select id="findpageClothes" resultType="com.company.bean.Clothes">
+        select * from clothes
+        <where>
+            <if test="type!=999">
+                type=#{type}
+            </if>
+        </where>
+        order by rand() limit #{num}
+    </select>
+    <select id="findmaninfo" resultType="com.company.bean.Clothes" >
+        select * from clothes
+         <where>
+             <if test="type!=999">
+                 type=#{type} and
+             </if>
+             clothes_name=#{name}
+         </where>
+    </select>
+    <select id="findoneCart" parameterType="int" resultType="com.company.bean.Cart">
+        select * from cart where cartid=#{id}
+    </select>
+    <select id="findCart" resultType="com.company.bean.Cart" parameterType="int">
+        select * from cart where userid=#{userid}
+    </select>
+    <update id="setCartnums" parameterType="int">
+        update cart set nums=#{nums} where cartid=#{cartId}
+    </update>
+    <select id="cartSettlement"  resultType="int" parameterType="int">
+        SELECT SUM(price*nums) FROM cart where userid=#{userid};
+    </select>
+    <insert id="buygood" parameterType="com.company.bean.Cart">
+        insert into cart(userid,goodsname,image,attribute,price,nums,stock,color) values(#{userid},#{goodsname},#{image},#{attribute},#{price},#{nums},#{stock},#{color})
+    </insert>
+    <delete id="deletegoods" parameterType="int">
+        delete from cart where cartid=#{id}
+    </delete>
+    <insert id="register" parameterType="com.company.bean.User">
+        insert into user(username,password,type,balance) values(#{username},#{password},1,0)
+    </insert>
+    <select id="findcollect" resultType="com.company.bean.Collect" parameterType="int">
+        select * from collect where userid=#{userid}
+    </select>
+    <select id="findcollectbrand" resultType="com.company.bean.Collectbrand" parameterType="int">
+        select * from collectbrand where userid=#{userid}
+    </select>
+    <insert id="insertcollect" parameterType="com.company.bean.Collect">
+        insert into collect (userid,collectname,price,image) values (#{userid},#{collectname},#{price},#{image})
+    </insert>
+    <insert id="insertcollectbrand" parameterType="com.company.bean.Collectbrand">
+        insert into  collectbrand(userid,brandname,brandimage) values (#{userid},#{brandname},#{brandimage})
+    </insert>
+    <delete id="deletecollect" parameterType="int">
+        delete from collect where collectid=#{id}
+    </delete>
+    <delete id="deletecollectbrand" parameterType="int">
+        delete from collectbrand where brandid=#{id}
+    </delete>
+    <select id="flagcollect" resultType="com.company.bean.Collect">
+        select * from collect where collectname=#{name} and userid=#{userid};
+    </select>
+    <select id="flagcollectbrand" resultType="com.company.bean.Collectbrand">
+        select * from collectbrand where brandname=#{brandname} and userid=#{userid};
+    </select>
+    <select id="brandshop" resultType="com.company.pojo.Brandclothes" parameterType="String">
+        select * from clothes a,brand b where a.brand=b.brand and a.brand=#{brand}
+    </select>
+    <update id="updatapassword" parameterType="com.company.bean.User">
+        update  user set password=#{password}  where userid=#{userid}
+    </update>
+    <update id="updataonself" parameterType="com.company.bean.User">
+        update user set  headimage=#{headimage},
+        nickname=#{nickname},
+             truename=#{truename},
+             phone=#{phone},
+             email=#{email}  where userid=#{userid}
+    </update>
+    <update id="updatePSbyPhone" parameterType="com.company.bean.User">
+        update user set password=#{password}   where phone=#{phone}
+    </update>
+    <select id="findByPhone" parameterType="String" resultType="com.company.bean.User">
+        select * from user where phone=#{phone} limit 1
+    </select>
+    <select id="clothesBybrand" parameterType="String" resultType="com.company.bean.Clothes">
+        select * from clothes where brand=#{brand}
+    </select>
+    <select id="clothesByprice" parameterType="int" resultType="com.company.bean.Clothes">
+        select * from clothes where price&lt;=#{price} and price&gt;=#{min}
+    </select>
+    <select id="findallClothes" resultType="com.company.bean.Clothes">
+        select * from clothes
+    </select>
+    <select id="addCart" resultType="com.company.bean.Cart" parameterType="String">
+        select * from cart where goodsname=#{goodname} and attribute=#{attribute} and color=#{color}
+    </select>
+    <update id="addCartnums">
+        update cart set nums=nums+#{nums} where goodsname=#{goodname} and attribute=#{attribute} and color=#{color}
+    </update>
+    <select id="findStock" parameterType="int" resultType="com.company.bean.Cart">
+        select * from cart where cartid=#{cartId}
+    </select>
+    <select id="findByimage" parameterType="String" resultType="com.company.bean.Clothes">
+        select * from clothes where images=#{image}
+    </select>
+
+    
+
+
+
+</mapper>

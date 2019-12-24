@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.company.dao.OrderDao">
+    <select id="findOrder" resultType="com.company.bean.Order">
+        select * from orderr
+    </select>
+    <select id="likeOrder" resultType="com.company.bean.Order">
+         select * from orderr
+        <where>
+             <if test="search!=null">
+                 orderid like "%"#{search}"%" and
+             </if>
+             userid=#{userid}
+         </where>
+    </select>
+    <insert id="insertOrder" parameterType="com.company.bean.Order">
+        insert into orderr(userid,image,name,price,nums,ordertime) values(#{userid},#{image},#{name},#{price},#{nums},#{ordertime})
+    </insert>
+    <select id="findInquiry" resultType="com.company.bean.Inquiry" parameterType="int">
+        select * from inquiry where userid=#{userid}
+    </select>
+    <select id="findOneInquiry" resultType="com.company.bean.Inquiry" parameterType="int">
+        select * from inquiry where userid=#{userid} and inquiryid=#{inquiryid}
+    </select>
+    <delete id="deleteInquiry" parameterType="int">
+        delete from inquiry where inquiryid=#{inquiryid}
+    </delete>
+    <select id="findaddress" parameterType="int" resultType="com.company.bean.Addresslist">
+        select * from addresslist where userid=#{userid}
+    </select>
+    <insert id="insertaddress" parameterType="com.company.bean.Addresslist">
+        insert into  addresslist(userid,name,phone,address) values (#{userid},#{name},#{phone},#{address})
+    </insert>
+    <select id="findaccount" resultType="com.company.pojo.Moneytran">
+        SELECT * FROM account a,user b WHERE a.userid=b.userid and a.userid=#{userid}
+    </select>
+    <update id="updatamoney" parameterType="com.company.pojo.Moneytran">
+        update account a,user b set  b.balance=b.balance+#{transaction}  where b.userid=#{userid}
+    </update>
+    <update id="updatamoneynew" parameterType="int">
+        update user  SET balance=balance+#{transaction} WHERE  userid=#{userid}
+    </update>
+    <insert id="insertmoney" parameterType="com.company.bean.Account">
+        insert into  account (userid,accounttype,transaction,accounttime,thatbalance)
+        values (#{userid},#{accounttype},#{transaction},#{accounttime},#{thatbalance})
+    </insert>
+    <delete id="deleteaddress" parameterType="com.company.bean.Addresslist">
+        delete from addresslist where userid=#{userid} and addressid=#{addressid}
+    </delete>
+    <select id="orderdetailed" resultType="com.company.bean.Order" parameterType="int">
+        select * from orderr where orderid=#{orderid}
+    </select>
+
+    
+
+
+
+</mapper>
